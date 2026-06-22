@@ -15,7 +15,10 @@
         rows="4"
       ></textarea>
       <p class="form-hint">
-        已输入 <span :class="{ 'text-danger': text.length > 500 }">{{ text.length }}</span> / 2953 字符
+        已输入 <span :class="{ 'text-danger': validation.byteLength > 2000 }">{{ validation.byteLength }}</span> / 2953 字节
+      </p>
+      <p v-if="!validation.valid && validation.message" class="form-error">
+        {{ validation.message }}
       </p>
     </div>
 
@@ -95,6 +98,9 @@
           <span class="ec-desc">{{ level.desc }}</span>
         </button>
       </div>
+      <p class="form-hint form-hint-muted">
+        L(7%) / M(15%) / Q(25%) / H(30%) 表示二维码损坏后仍可恢复的比例
+      </p>
     </div>
 
     <div class="form-group">
@@ -119,7 +125,8 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
+import { validateQrContent } from '@/utils/common'
 
 const props = defineProps({
   text: { type: String, default: '' },
@@ -145,6 +152,8 @@ const ecLevels = [
   { value: 'Q', label: 'Q', desc: '25%' },
   { value: 'H', label: 'H', desc: '30%' },
 ]
+
+const validation = computed(() => validateQrContent(localText.value))
 
 function emitUpdate() {
   emit('update:options', {
@@ -243,6 +252,16 @@ watch(
 .text-danger {
   color: var(--color-warning);
   font-weight: 500;
+}
+
+.form-error {
+  font-size: 12px;
+  color: var(--color-danger);
+  font-weight: 500;
+  padding: 8px 12px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-sm);
 }
 
 .form-row {

@@ -12,8 +12,8 @@
         :style="{ display: hasContent ? 'block' : 'none' }"
       ></canvas>
       <div v-if="!hasContent" class="empty-state">
-        <div class="empty-icon">📷</div>
-        <p class="empty-text">请在左侧输入内容</p>
+        <div class="empty-icon">{{ validation.message ? '⚠️' : '📷' }}</div>
+        <p class="empty-text">{{ validation.message || '请在左侧输入内容' }}</p>
       </div>
     </div>
 
@@ -67,9 +67,8 @@ const props = defineProps({
 const canvasRef = ref(null)
 const canvasSize = ref(0)
 
-const hasContent = computed(() => {
-  return validateQrContent(props.text).valid
-})
+const validation = computed(() => validateQrContent(props.text))
+const hasContent = computed(() => validation.value.valid)
 
 function renderQr() {
   if (!canvasRef.value) return

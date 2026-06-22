@@ -1,5 +1,5 @@
 import { generateSvgString } from './qrcode'
-import { downloadFile } from './common'
+import { downloadFile, normalizeHex } from './common'
 
 export function exportAsPng(canvas, filename = 'qrcode.png') {
   const dataUrl = canvas.toDataURL('image/png')
@@ -7,7 +7,12 @@ export function exportAsPng(canvas, filename = 'qrcode.png') {
 }
 
 export function exportAsSvg(text, options = {}, filename = 'qrcode.svg') {
-  const svgString = generateSvgString(text, options)
+  const normalizedOptions = {
+    ...options,
+    foreground: options.foreground ? normalizeHex(options.foreground) : '#000000',
+    background: options.background ? normalizeHex(options.background) : '#ffffff',
+  }
+  const svgString = generateSvgString(text, normalizedOptions)
   const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
   const dataUrl = URL.createObjectURL(svgBlob)
   downloadFile(dataUrl, filename)

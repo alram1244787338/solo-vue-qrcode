@@ -3,6 +3,8 @@
  * 支持版本 1-40，纠错等级 L/M/Q/H，字节编码模式
  * ============================================================ */
 
+import { normalizeHex } from './common'
+
 const PAD0 = 0xEC
 const PAD1 = 0x11
 
@@ -632,6 +634,9 @@ export function drawQrToCanvas(canvas, text, options = {}) {
     ecLevel = 'M',
   } = options
 
+  const fg = normalizeHex(foreground)
+  const bg = normalizeHex(background)
+
   const matrix = generateMatrix(text, ecLevel)
   const moduleCount = matrix.length
   const totalModules = moduleCount + margin * 2
@@ -643,10 +648,10 @@ export function drawQrToCanvas(canvas, text, options = {}) {
 
   const ctx = canvas.getContext('2d')
 
-  ctx.fillStyle = background
+  ctx.fillStyle = bg
   ctx.fillRect(0, 0, actualSize, actualSize)
 
-  ctx.fillStyle = foreground
+  ctx.fillStyle = fg
   for (let r = 0; r < moduleCount; r++) {
     for (let c = 0; c < moduleCount; c++) {
       if (matrix[r][c]) {
@@ -695,20 +700,23 @@ export function generateSvgString(text, options = {}) {
     ecLevel = 'M',
   } = options
 
+  const fg = normalizeHex(foreground)
+  const bg = normalizeHex(background)
+
   const matrix = generateMatrix(text, ecLevel)
   const moduleCount = matrix.length
   const totalModules = moduleCount + margin * 2
   const moduleSize = size / totalModules
 
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">`
-  svg += `<rect width="${size}" height="${size}" fill="${background}"/>`
+  svg += `<rect width="${size}" height="${size}" fill="${bg}"/>`
 
   for (let r = 0; r < moduleCount; r++) {
     for (let c = 0; c < moduleCount; c++) {
       if (matrix[r][c]) {
         const x = (c + margin) * moduleSize
         const y = (r + margin) * moduleSize
-        svg += `<rect x="${x}" y="${y}" width="${moduleSize}" height="${moduleSize}" fill="${foreground}"/>`
+        svg += `<rect x="${x}" y="${y}" width="${moduleSize}" height="${moduleSize}" fill="${fg}"/>`
       }
     }
   }
