@@ -3,7 +3,7 @@
  * 支持版本 1-40，纠错等级 L/M/Q/H，字节编码模式
  * ============================================================ */
 
-import { normalizeHex } from './common'
+import { normalizeHex } from './common.js'
 
 const PAD0 = 0xEC
 const PAD1 = 0x11

@@ -1,5 +1,5 @@
-import { generateSvgString } from './qrcode'
-import { downloadFile, normalizeHex } from './common'
+import { generateSvgString } from './qrcode.js'
+import { downloadFile, normalizeHex } from './common.js'
 
 export function exportAsPng(canvas, filename = 'qrcode.png') {
   const dataUrl = canvas.toDataURL('image/png')
