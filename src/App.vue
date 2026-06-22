@@ -6,11 +6,27 @@
       <div class="app-container">
         <div class="layout-grid">
           <aside class="panel panel-left">
-            <QrFormPlaceholder />
+            <QrForm
+              :text="qrOptions.text"
+              :foreground="qrOptions.foreground"
+              :background="qrOptions.background"
+              :size="qrOptions.size"
+              :ecLevel="qrOptions.ecLevel"
+              :showLogo="qrOptions.showLogo"
+              @update:options="handleOptionsUpdate"
+            />
           </aside>
 
           <section class="panel panel-right">
-            <QrPreviewPlaceholder />
+            <QrPreview
+              ref="previewRef"
+              :text="qrOptions.text"
+              :foreground="qrOptions.foreground"
+              :background="qrOptions.background"
+              :size="qrOptions.size"
+              :ecLevel="qrOptions.ecLevel"
+              :showLogo="qrOptions.showLogo"
+            />
           </section>
         </div>
       </div>
@@ -21,10 +37,26 @@
 </template>
 
 <script setup>
+import { ref, reactive } from 'vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
-import QrFormPlaceholder from '@/components/QrFormPlaceholder.vue'
-import QrPreviewPlaceholder from '@/components/QrPreviewPlaceholder.vue'
+import QrForm from '@/components/QrForm.vue'
+import QrPreview from '@/components/QrPreview.vue'
+
+const previewRef = ref(null)
+
+const qrOptions = reactive({
+  text: 'https://www.feishu.cn',
+  foreground: '#000000',
+  background: '#ffffff',
+  size: 300,
+  ecLevel: 'M',
+  showLogo: false,
+})
+
+function handleOptionsUpdate(options) {
+  Object.assign(qrOptions, options)
+}
 </script>
 
 <style scoped>
